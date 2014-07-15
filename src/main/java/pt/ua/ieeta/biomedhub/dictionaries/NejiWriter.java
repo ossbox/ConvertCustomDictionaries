@@ -53,8 +53,8 @@ public class NejiWriter implements Writer {
                 {
                     _syns += _syn + "|";
                 }
-                writer.write("UMLS:"+s+":biomedhub:ctakes " + removeLastChar(_syns) + "\n" );
-                System.out.println("UMLS:"+s+":biomedhub:ctakes " + removeLastChar(_syns) );
+                writer.write("UMLS:"+s+":T023:ANAT\t" + removeLastChar(_syns) + "\n" );
+                System.out.println("UMLS:"+s+":T023:ANAT\t" + removeLastChar(_syns) );
                 
             }
         } catch (IOException e) {
