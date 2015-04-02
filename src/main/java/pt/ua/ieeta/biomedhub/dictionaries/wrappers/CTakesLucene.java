@@ -30,9 +30,10 @@ import java.util.logging.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -51,7 +52,7 @@ public class CTakesLucene  implements Reader
     
     private String directory ;
     private Directory index;
-    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_9);
     private Multimap<String, String> synons = ArrayListMultimap.create();
 
     
@@ -73,23 +74,23 @@ public class CTakesLucene  implements Reader
     {
         
         try {
-            if (!IndexReader.indexExists(index)) {
+            if (!DirectoryReader.indexExists(index)) {
                 return null;
             }
         } catch (IOException ex) {
             Logger.getLogger("lucene").log(Level.SEVERE, null, ex);
         }
-        
-        
+
+
         String querystr = "*:*";
         Query q = null;
         try {
-            q = new QueryParser(Version.LUCENE_30, "title", analyzer).parse(querystr);
+            q = new QueryParser(Version.LUCENE_4_9, "title", analyzer).parse(querystr);
         } catch (ParseException ex) {
             Logger.getLogger(CTakesLucene.class.getName()).log(Level.SEVERE, null, ex);
         }
         int hitsPerPage = 100;
-        IndexReader reader = IndexReader.open(index);
+        IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopScoreDocCollector collector = TopScoreDocCollector.create(200000, true);
         searcher.search(q, collector);
